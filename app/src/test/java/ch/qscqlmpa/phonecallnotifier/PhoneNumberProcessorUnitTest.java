@@ -36,6 +36,7 @@ public class PhoneNumberProcessorUnitTest {
         assertEquals(true, PhoneNumberProcessor.doesPhoneNumberMatchFormat(phoneNumber,"#############"));
         assertEquals(true, PhoneNumberProcessor.doesPhoneNumberMatchFormat(phoneNumber,"0041#########"));
         assertEquals(true, PhoneNumberProcessor.doesPhoneNumberMatchFormat(phoneNumber,"+41#########"));
+        assertEquals(true, PhoneNumberProcessor.doesPhoneNumberMatchFormat(phoneNumber,"+41a78 7$77!23_4-3"));
     }
 
     @Test

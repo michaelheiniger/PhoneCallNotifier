@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import timber.log.Timber;
+
 public class PhoneNumberProcessor {
 
     private static final String TAG = "PhoneNumberProcessor";
@@ -17,7 +19,7 @@ public class PhoneNumberProcessor {
         Pattern pattern = Pattern.compile(translateFormatIntoRegex(format));
         Matcher matcher = pattern.matcher(phoneNumberStd);
 
-        Log.d(TAG, "Phone number: " + phoneNumberStd + ", format: " + format);
+        Timber.d(TAG, "Phone number: " + phoneNumberStd + ", format: " + format);
 
         return matcher.matches();
     }
@@ -34,10 +36,16 @@ public class PhoneNumberProcessor {
 
     private static String translateFormatIntoRegex(String format) {
 
+        // WARNING: the order of the replace statements matters !
         String regex = format;
-        regex = regex.replaceAll("#", "[0-9]");
-        regex = regex.replaceAll("\\s", "");
+        regex = regex.replaceAll("\\[", "");
+        regex = regex.replaceAll("\\]", "");
+        regex = regex.replaceAll("-", "");
+
         regex = regex.replace("+", "00");
+        regex = regex.replaceAll("#", "[0-9]");
+
+        regex = regex.replaceAll("[^0-9\\[\\]-]", "");
 
         return regex;
     }
