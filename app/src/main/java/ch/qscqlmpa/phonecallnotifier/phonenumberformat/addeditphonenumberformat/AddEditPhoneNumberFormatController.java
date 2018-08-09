@@ -1,6 +1,7 @@
 package ch.qscqlmpa.phonecallnotifier.phonenumberformat.addeditphonenumberformat;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -106,5 +107,25 @@ public class AddEditPhoneNumberFormatController extends BaseController {
         if (parentController instanceof PhoneNumberFormatController) {
             ((PhoneNumberFormatController) parentController).cancelEditPhoneNumberFormat();
         }
+    }
+
+    @OnClick(R.id.aepnf_format_help_btn)
+    public void displayHelp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setMessage(
+                "The format of a phone number (as understood in this app) can contain the following characters:\n"
+                + "digits [0-9], + which is understood as 00, spaces which are ignored (it allows to make the format easier to read for humans),"
+                + " dash # which is a placeholder for one digit. Using # allows to determine the number of digits that "
+                + "contain the numbers to be blocked. There is no wildcard allowing to block numbers with an arbitrary number of digits to "
+                + "avoid user mistakes (which could lead to block unexpected numbers) Any other characters are ignored\n"
+                + "Examples: +41 78 772 23 23 is the same as 0041 78 772 23 23 and corresponds to as single phone number\n"
+                + "00248 ### ### ## corresponds to any phone number starting with 00248 followed by any 8 digits\n"
+                + "0aq034gx?$ / corresponds to the number 0034")
+                .setTitle("Help - Phone number format")
+                .setPositiveButton("Ok",null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
