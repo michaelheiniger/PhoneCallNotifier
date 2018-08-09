@@ -29,7 +29,7 @@ Examples:
   
   
 ### Permissions:
-  *android.permission.READ_PHONE_STATE: required to detect incoming phone calls
-  *android.permission.CALL_PHONE: required to automatically reject the phone call
+  * android.permission.READ_PHONE_STATE: required to detect incoming phone calls
+  * android.permission.CALL_PHONE: required to automatically reject the phone call
   
   
