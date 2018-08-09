@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PhoneCallNotifier</string>
+    <string name="action_settings">Settings</string>
+    <string name="db_error_phonenumberformats">Error loading phone number formats</string>
+    <string name="db_error_phonenumberformat">Error loading phone number format</string>
+    <string name="format_enabled">Enabled</string>
+    <string name="format_disabled">Disabled</string>
+</resources>
