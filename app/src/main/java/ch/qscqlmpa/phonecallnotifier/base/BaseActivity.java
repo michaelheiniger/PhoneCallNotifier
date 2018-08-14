@@ -11,6 +11,7 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
 
 import java.util.UUID;
 
@@ -19,17 +20,14 @@ import javax.inject.Inject;
 import ch.qscqlmpa.phonecallnotifier.R;
 import ch.qscqlmpa.phonecallnotifier.di.Injector;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenInjector;
-import ch.qscqlmpa.phonecallnotifier.ui.ScreenNavigator;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static String INSTANCE_ID_KEY = "instance_id";
 
     @Inject ScreenInjector screenInjector;
-    @Inject ScreenNavigator screenNavigator;
 
     private String instanceId;
-    private Router router;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,10 +46,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             throw new NullPointerException("Activity must have a view with id:controller_container");
         }
 
-        router = Conductor.attachRouter(this, controllerContainer, savedInstanceState);
-
-        screenNavigator.initWithRouter(router, initialScreen());
-//        monitorBackStack();
+        Router router = Conductor.attachRouter(this, controllerContainer, savedInstanceState);
+        if (!router.hasRootController()) {
+            router.setRoot(RouterTransaction.with(initialScreen()));
+        }
 
         super.onCreate(savedInstanceState);
     }
@@ -75,13 +73,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         outState.putString(INSTANCE_ID_KEY, instanceId);
     }
 
-    @Override
-    public void onBackPressed() {
-        // If the screenNavigator did NOT handle the pop, then we finish the activity
-//        if (!screenNavigator.pop()) {
-            super.onBackPressed();
-//        }
-    }
 
     public String getInstanceId() {
         return instanceId;
@@ -91,8 +82,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        screenNavigator.clear();
-
         if (isFinishing()) {
             Injector.clearComponent(this);
         }
@@ -100,35 +89,5 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public ScreenInjector getScreenInjector() {
         return screenInjector;
-    }
-
-
-    private void monitorBackStack() {
-        router.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(
-                    @Nullable Controller to,
-                    @Nullable Controller from,
-                    boolean isPush, @NonNull ViewGroup container,
-                    @NonNull ControllerChangeHandler handler) {
-
-
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to,
-                                          @Nullable Controller from,
-                                          boolean isPush,
-                                          @NonNull ViewGroup container,
-                                          @NonNull ControllerChangeHandler handler) {
-
-                // Pop event: the controller is not in the backstack anymore, we don't want
-                // its component to survive
-                if (!isPush && from != null) {
-                    Injector.clearComponent(from);
-                }
-
-            }
-        });
     }
 }
