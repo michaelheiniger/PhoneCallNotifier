@@ -1,4 +1,5 @@
 # PhoneCallNotifier
+[![Build Status](https://travis-ci.com/michaelheiniger/PhoneCallNotifier.svg?branch=master)](https://travis-ci.com/michaelheiniger/PhoneCallNotifier)
 
 This small Android app allows to define simple regex of phone numbers in order to reject the calls automatically.
 The idea came when one day I received many calls from some number of the Seychelles.
