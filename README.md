@@ -1,9 +1,15 @@
 # PhoneCallNotifier
+[![Build Status](https://travis-ci.com/michaelheiniger/PhoneCallNotifier.svg?branch=master)](https://travis-ci.com/michaelheiniger/PhoneCallNotifier)
 
 This small Android app allows to define simple regex of phone numbers in order to reject the calls automatically.
 The idea came when one day I received many calls from some number of the Seychelles.
 These were obviously attempts to make me answer a toll call. By automatically rejecting the calls coming from some
 numbers, I didn't need switch my phone into silent mode to not be bothered.
+
+This is also a way for me to practice programming in general and in particular on the Android platform.
+Among the dependencies, the project uses [Dagger2](https://google.github.io/dagger/) as the dependency injection framework, 
+[RxJava2](https://github.com/ReactiveX/RxJava),  
+[Room persistence library](https://developer.android.com/topic/libraries/architecture/room) and [Conductor](https://github.com/bluelinelabs/Conductor) for views (instead of Android Fragments). 
 
 ### Features:
   * Allows the user to define phone number formats that can be enabled or disabled

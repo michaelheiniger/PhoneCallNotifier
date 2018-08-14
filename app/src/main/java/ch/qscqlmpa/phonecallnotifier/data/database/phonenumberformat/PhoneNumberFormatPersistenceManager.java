@@ -44,6 +44,7 @@ public class PhoneNumberFormatPersistenceManager {
     }
 
     private void runDbOperation(Action action) {
+        //TODO: Should it be disposed ? Since the instance of PhoneNumberFormatPersistenceManager is a Singleton, is that still necessary ?
         Completable.fromAction(action)
                 .subscribeOn(scheduler)
                 .subscribe(() -> {}, throwable -> Timber.e(throwable, "Error performing database operation"));

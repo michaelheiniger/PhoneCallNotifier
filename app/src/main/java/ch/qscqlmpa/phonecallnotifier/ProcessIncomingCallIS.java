@@ -18,6 +18,7 @@ import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumber
 import ch.qscqlmpa.phonecallnotifier.data.database.AppRoomDatabase;
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
 import ch.qscqlmpa.phonecallnotifier.home.MainActivity;
+import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
 import ch.qscqlmpa.phonecallnotifier.phonecall.PhoneNumberProcessor;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -36,7 +37,7 @@ public class ProcessIncomingCallIS extends BaseService {
 
     public static final String EXTRA_CALLER_NUMBER = "extra_caller_number";
 
-    private Disposable disposable;
+    private DisposableManager disposableManager = new DisposableManager();
 
     @Inject AppRoomDatabase database;
 
@@ -65,16 +66,18 @@ public class ProcessIncomingCallIS extends BaseService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        disposable.dispose();
+        disposableManager.dispose();
     }
 
     private void handleActionProcessReceivedCallEvent(String callerNumber) {
         PhoneNumberFormatDao phoneNumberFormatDao = database.phoneNumberFormatRegularDao();
-        disposable = phoneNumberFormatDao.getEnabledPhoneNumberFormats()
+        disposableManager.add(
+                phoneNumberFormatDao.getEnabledPhoneNumberFormats()
                 .subscribeOn(Schedulers.io())
                 .subscribe(phoneNumberFormats -> {
                     processPhoneNumberFormats(callerNumber, phoneNumberFormats);
-                });
+                })
+        );
     }
 
     private void processPhoneNumberFormats(String callerNumber, List<PhoneNumberFormat> phoneNumberFormats) {

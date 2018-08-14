@@ -41,6 +41,7 @@ ext {
     butterknifeVersion = '8.8.1'
     mockitoVersion = '2.10.0'
     moshiVersion = '1.6.0'
+    leakCanaryVersion = '1.6.1'
 }
 
 task clean(type: Delete) {

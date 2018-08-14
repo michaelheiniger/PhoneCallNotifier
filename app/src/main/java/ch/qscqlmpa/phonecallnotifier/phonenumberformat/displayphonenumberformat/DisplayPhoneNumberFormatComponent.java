@@ -2,15 +2,19 @@ package ch.qscqlmpa.phonecallnotifier.phonenumberformat.displayphonenumberformat
 
 import javax.inject.Named;
 
+import ch.qscqlmpa.phonecallnotifier.base.ScreenModule;
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.di.ScreenComponent;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenScope;
 import dagger.BindsInstance;
 import dagger.Subcomponent;
 import dagger.android.AndroidInjector;
 
 @ScreenScope
-@Subcomponent
-public interface DisplayPhoneNumberFormatComponent extends AndroidInjector<DisplayPhoneNumberFormatController> {
+@Subcomponent(modules = {
+        ScreenModule.class
+})
+public interface DisplayPhoneNumberFormatComponent extends ScreenComponent<DisplayPhoneNumberFormatController> {
 
     @Subcomponent.Builder
     abstract class Builder extends AndroidInjector.Builder<DisplayPhoneNumberFormatController> {
