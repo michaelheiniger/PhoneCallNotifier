@@ -12,3 +12,8 @@ jdk:
 
 script:
  - ./gradlew test
+
+branches:
+  only:
+  - master
+  - develop
