@@ -12,18 +12,18 @@ import dagger.Provides;
 @Module
 public abstract class AddEditPhoneNumberFormatModule {
 
-    @Provides
-    @ScreenScope
-    static AddEditPhoneNumberFormatPresenter providePresenter(
-            AddEditPhoneNumberFormatViewModel viewModel,
-            PhoneNumberFormatRepository repository,
-            PhoneNumberFormatPersistenceManager phoneNumberFormatPersistenceManager,
-            @Named("phone_number_format_to_edit")
-                    PhoneNumberFormat phoneNumberFormat) {
-
-        return new AddEditPhoneNumberFormatPresenter(viewModel,
-                repository,
-                phoneNumberFormatPersistenceManager,
-                phoneNumberFormat);
-    }
+//    @Provides
+//    @ScreenScope
+//    static AddEditPhoneNumberFormatPresenter providePresenter(
+//            AddEditPhoneNumberFormatViewModel viewModel,
+//            PhoneNumberFormatRepository repository,
+//            PhoneNumberFormatPersistenceManager phoneNumberFormatPersistenceManager,
+//            @Named("phone_number_format_to_edit")
+//                    PhoneNumberFormat phoneNumberFormat) {
+//
+//        return new AddEditPhoneNumberFormatPresenter(viewModel,
+//                repository,
+//                phoneNumberFormatPersistenceManager,
+//                phoneNumberFormat);
+//    }
 }

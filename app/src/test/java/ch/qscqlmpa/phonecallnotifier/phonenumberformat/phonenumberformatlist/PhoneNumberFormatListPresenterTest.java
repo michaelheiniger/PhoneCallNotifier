@@ -11,9 +11,11 @@ import java.util.List;
 
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
 import ch.qscqlmpa.phonecallnotifier.data.phonenumberformat.PhoneNumberFormatRepository;
+import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -68,7 +70,7 @@ public class PhoneNumberFormatListPresenterTest {
     }
 
     private void initializePresenter() {
-        presenter = new PhoneNumberFormatListPresenter(viewModel, repository);
+        presenter = new PhoneNumberFormatListPresenter(viewModel, repository, mock(DisposableManager.class));
     }
 
     private Throwable setUpError() {
