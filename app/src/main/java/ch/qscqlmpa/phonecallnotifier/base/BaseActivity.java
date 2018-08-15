@@ -38,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             instanceId = UUID.randomUUID().toString();
         }
         Injector.inject(this);
+        super.onCreate(savedInstanceState);
 
         setContentView(layoutRes());
 
@@ -55,7 +56,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         for (ActivityLifecycleTask task : activityLifecycleTaskSet) {
             task.onCreate(this);
         }
-        super.onCreate(savedInstanceState);
     }
 
     /**
