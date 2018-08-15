@@ -7,10 +7,12 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersistenceManager;
 import ch.qscqlmpa.phonecallnotifier.data.phonenumberformat.PhoneNumberFormatRepository;
 import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatViewModel;
 import io.reactivex.Single;
 import io.reactivex.functions.Consumer;
 
@@ -19,9 +21,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class DisplayPhoneNumberFormatPresenterTest {
+public class DisplayPhoneNumberFormatPersistPresenterTest {
 
-    @Mock DisplayPhoneNumberFormatViewModel viewModel;
+    @Mock
+    PhoneNumberFormatViewModel viewModel;
     @Mock
     PhoneNumberFormatRepository repository;
     @Mock
@@ -40,11 +43,11 @@ public class DisplayPhoneNumberFormatPresenterTest {
 
     @Test
     public void phoneNumberFormatToDisplayLoaded() throws Exception {
-        PhoneNumberFormat format = setupPhoneNumberFormatToDisplaySuccess();
-        initializePresenter(format);
+        PhoneNumberFormat pnf = setupPhoneNumberFormatToDisplaySuccess();
+        initializePresenter(pnf);
 
-        verify(repository).getPhoneNumberFormat(format);
-        verify(onSuccessConsumer).accept(format);
+        verify(repository).getPhoneNumberFormat(pnf);
+        verify(onSuccessConsumer).accept(pnf);
         verifyZeroInteractions(onErrorConsumer);
     }
 
@@ -59,28 +62,29 @@ public class DisplayPhoneNumberFormatPresenterTest {
 
     @Test
     public void deletePhoneNumberFormatTest() {
-        PhoneNumberFormat format = setupPhoneNumberFormatToDisplaySuccess();
-        initializePresenter(format);
+        PhoneNumberFormat pnf = setupPhoneNumberFormatToDisplaySuccess();
+        initializePresenter(pnf);
 
-        when(viewModel.lastPhoneNumberFormat()).thenReturn(format);
+        when(viewModel.lastPhoneNumberFormat()).thenReturn(pnf);
 
         presenter.deletePhoneNumberFormat();
 
-        verify(phoneNumberFormatPersistenceManager).deletePhoneNumberFormat(format);
+        verify(phoneNumberFormatPersistenceManager).deletePhoneNumberFormat(pnf.id());
     }
 
     private PhoneNumberFormat setupPhoneNumberFormatToDisplaySuccess() {
-        PhoneNumberFormat phoneNumberFormat = phoneNumberFormatToDisplay();
-        when(repository.getPhoneNumberFormat(phoneNumberFormat)).thenReturn(Single.just(phoneNumberFormat));
-        return phoneNumberFormat;
+        PhoneNumberFormat pnf = phoneNumberFormatToDisplay();
+        when(repository.getPhoneNumberFormat(pnf)).thenReturn(Single.just(pnf));
+        return pnf;
     }
 
     private PhoneNumberFormat phoneNumberFormatToDisplay() {
-        Integer id = 1;
-        String description = "the format description";
-        String format = " the format";
-        Boolean isEnabled = true;
-        return new PhoneNumberFormat(id, description, format, isEnabled);
+        return PhoneNumberFormat.builder()
+                .setId(1L)
+                .setDescription("The format description")
+                .setFormat("The format")
+                .setIsEnabled(true)
+                .build();
     }
 
     private void initializePresenter(PhoneNumberFormat phoneNumberFormat) {

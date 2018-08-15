@@ -15,21 +15,21 @@ import io.reactivex.Single;
 public interface PhoneNumberFormatDao {
 
     @Insert
-    void insertPhoneNumberFormat(PhoneNumberFormat phoneNumberFormat);
+    void insertPhoneNumberFormat(PhoneNumberFormatPersist phoneNumberFormatPersist);
 
     @Update
-    void updatePhoneNumberFormat(PhoneNumberFormat phoneNumberFormat);
+    void updatePhoneNumberFormat(PhoneNumberFormatPersist phoneNumberFormatPersist);
 
-    @Delete
-    void deletePhoneNumberFormat(PhoneNumberFormat phoneNumberFormat);
+    @Query("DELETE FROM phone_number_format WHERE id=:id")
+    void deletePhoneNumberFormat(Long id);
 
     @Query("SELECT * FROM phone_number_format ORDER BY id ASC")
-    Flowable<List<PhoneNumberFormat>> getAllPhoneNumberFormats();
+    Flowable<List<PhoneNumberFormatPersist>> getAllPhoneNumberFormats();
 
     @Query("SELECT * FROM phone_number_format WHERE isEnabled=1 ORDER BY id ASC")
-    Flowable<List<PhoneNumberFormat>> getEnabledPhoneNumberFormats();
+    Flowable<List<PhoneNumberFormatPersist>> getEnabledPhoneNumberFormats();
 
     @Query("SELECT * FROM phone_number_format WHERE id=:id")
-    Single<PhoneNumberFormat> getPhoneNumberFormat(int id);
+    Single<PhoneNumberFormatPersist> getPhoneNumberFormat(Long id);
 
 }

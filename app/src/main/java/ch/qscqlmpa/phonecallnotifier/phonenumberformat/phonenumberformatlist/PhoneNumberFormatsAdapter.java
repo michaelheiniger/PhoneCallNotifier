@@ -16,7 +16,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ch.qscqlmpa.phonecallnotifier.R;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 
 class PhoneNumberFormatsAdapter extends RecyclerView.Adapter<PhoneNumberFormatsAdapter.PhoneNumberFormatsViewHolder> {
 
@@ -48,14 +49,14 @@ class PhoneNumberFormatsAdapter extends RecyclerView.Adapter<PhoneNumberFormatsA
 
     @Override
     public long getItemId(int position) {
-        return data.get(position).getId();
+        return data.get(position).id();
     }
 
-    void setData(List<PhoneNumberFormat> phoneNumberFormats) {
-        if (phoneNumberFormats != null) {
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PhoneNumberFormatsDiffCallback(data, phoneNumberFormats));
+    void setData(List<PhoneNumberFormat> phoneNumberFormatList) {
+        if (phoneNumberFormatList != null) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PhoneNumberFormatsDiffCallback(data, phoneNumberFormatList));
             data.clear();
-            data.addAll(phoneNumberFormats);
+            data.addAll(phoneNumberFormatList);
             diffResult.dispatchUpdatesTo(this);
         } else {
             data.clear();
@@ -86,10 +87,10 @@ class PhoneNumberFormatsAdapter extends RecyclerView.Adapter<PhoneNumberFormatsA
 
         void bind(PhoneNumberFormat format) {
             this.format = format;
-            formatDescriptionTv.setText(format.getDescription());
-            formatTv.setText(format.getFormat());
-            formatEnabledCkb.setChecked(format.getIsEnabled());
-            formatEnabledCkb.setText(format.getIsEnabled() ? R.string.format_enabled : R.string.format_disabled);
+            formatDescriptionTv.setText(format.description());
+            formatTv.setText(format.format());
+            formatEnabledCkb.setChecked(format.isEnabled());
+            formatEnabledCkb.setText(format.isEnabled() ? R.string.format_enabled : R.string.format_disabled);
         }
     }
 

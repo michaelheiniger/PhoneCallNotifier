@@ -2,19 +2,23 @@ package ch.qscqlmpa.phonecallnotifier.phonenumberformat.addeditphonenumberformat
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersistenceManager;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
 import ch.qscqlmpa.phonecallnotifier.data.phonenumberformat.PhoneNumberFormatRepository;
 import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatViewModel;
 import io.reactivex.Single;
 import io.reactivex.functions.Consumer;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -23,7 +27,8 @@ import static org.mockito.Mockito.when;
 
 public class AddEditPhoneNumberFormatPresenterTest {
 
-    @Mock AddEditPhoneNumberFormatViewModel viewModel;
+    @Mock
+    PhoneNumberFormatViewModel viewModel;
     @Mock
     PhoneNumberFormatRepository repository;
     @Mock
@@ -42,31 +47,35 @@ public class AddEditPhoneNumberFormatPresenterTest {
 
     @Test
     public void saveNewPhoneNumberFormatTest() {
-        PhoneNumberFormat format = setupNewPhoneNumberFormatSuccess();
-        initializePresenterNewFormat(format);
+        PhoneNumberFormat pnf = setupNewPhoneNumberFormatSuccess();
+        PhoneNumberFormatPersist pnfPersist = PhoneNumberFormatPersist.convertPnfToPnfPersist(pnf);
+        initializePresenterNewFormat(pnf);
 
-        presenter.onSaveClick(format);
+        presenter.onSaveClick(pnf);
 
-        verify(phoneNumberFormatPersistenceManager).insertPhoneNumberFormat(format);
-        verify(phoneNumberFormatPersistenceManager, times(0)).updatePhoneNumberFormat(format);
+        ArgumentCaptor<PhoneNumberFormatPersist> argForInsert = ArgumentCaptor.forClass(PhoneNumberFormatPersist.class);
+        verify(phoneNumberFormatPersistenceManager).insertPhoneNumberFormat(argForInsert.capture());
+        assertEquals(true, argForInsert.getValue().isContentEqual(pnfPersist));
+
+        verify(phoneNumberFormatPersistenceManager, times(0)).updatePhoneNumberFormat(pnfPersist);
     }
 
     @Test
     public void saveEditedPhoneNumberFormatTest() {
-        PhoneNumberFormat format = setupPhoneNumberFormatToEditSuccess();
-        initializePresenterEditFormat(format);
+        PhoneNumberFormat pnf = setupPhoneNumberFormatToEditSuccess();
+        initializePresenterEditFormat(pnf);
 
-        PhoneNumberFormat formatFromDb = new PhoneNumberFormat(
-                format.getDescription(),
-                format.getFormat(),
-                format.getIsEnabled()
-        );
-        when(viewModel.lastPhoneNumberFormat()).thenReturn(formatFromDb);
+        PhoneNumberFormatPersist pnfPersist = PhoneNumberFormatPersist.convertPnfToPnfPersist(pnf);
 
-        presenter.onSaveClick(format);
+        when(viewModel.lastPhoneNumberFormat()).thenReturn(pnf);
 
-        verify(phoneNumberFormatPersistenceManager).updatePhoneNumberFormat(format);
-        verify(phoneNumberFormatPersistenceManager, times(0)).insertPhoneNumberFormat(format);
+        presenter.onSaveClick(pnf);
+
+        ArgumentCaptor<PhoneNumberFormatPersist> argForUpdate = ArgumentCaptor.forClass(PhoneNumberFormatPersist.class);
+        verify(phoneNumberFormatPersistenceManager).updatePhoneNumberFormat(argForUpdate.capture());
+        assertEquals(true, argForUpdate.getValue().isContentEqual(pnfPersist));
+
+        verify(phoneNumberFormatPersistenceManager, times(0)).insertPhoneNumberFormat(pnfPersist);
     }
 
     @Test
@@ -118,8 +127,7 @@ public class AddEditPhoneNumberFormatPresenterTest {
     }
 
     private PhoneNumberFormat setupNewPhoneNumberFormatSuccess() {
-        PhoneNumberFormat phoneNumberFormat = newPhoneNumberFormat();
-        return phoneNumberFormat;
+        return newPhoneNumberFormat();
     }
 
     private void initializePresenterNewFormat(PhoneNumberFormat phoneNumberFormat) {
@@ -143,17 +151,20 @@ public class AddEditPhoneNumberFormatPresenterTest {
     }
 
     private PhoneNumberFormat newPhoneNumberFormat() {
-        boolean isEnabled = true;
-        PhoneNumberFormat phoneNumberFormat = new PhoneNumberFormat(isEnabled);
-        return phoneNumberFormat;
+        return PhoneNumberFormat.builder()
+                .setDescription("")
+                .setFormat("")
+                .setIsEnabled(true)
+                .build();
     }
 
     private PhoneNumberFormat phoneNumberFormatToEdit() {
-        Integer id = 1;
-        String description = "the format description";
-        String format = " the format";
-        Boolean isEnabled = true;
-        return new PhoneNumberFormat(id, description, format, isEnabled);
+        return PhoneNumberFormat.builder()
+                .setId(1L)
+                .setDescription("The format description")
+                .setFormat("The format")
+                .setIsEnabled(true)
+                .build();
     }
 
     private Throwable setUpError() {

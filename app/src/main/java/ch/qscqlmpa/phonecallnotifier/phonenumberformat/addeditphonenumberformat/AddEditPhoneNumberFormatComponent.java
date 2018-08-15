@@ -3,9 +3,10 @@ package ch.qscqlmpa.phonecallnotifier.phonenumberformat.addeditphonenumberformat
 import javax.inject.Named;
 
 import ch.qscqlmpa.phonecallnotifier.base.ScreenModule;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenComponent;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenScope;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 import dagger.BindsInstance;
 import dagger.Subcomponent;
 import dagger.android.AndroidInjector;

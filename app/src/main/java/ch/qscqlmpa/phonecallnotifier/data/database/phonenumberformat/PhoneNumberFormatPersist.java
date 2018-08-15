@@ -8,18 +8,18 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.squareup.moshi.Json;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
+
 @Entity(tableName = "phone_number_format")
-public class PhoneNumberFormat implements Parcelable {
+public class PhoneNumberFormatPersist {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    private Integer id;
+    private Long id;
 
     private String description;
 
@@ -29,10 +29,10 @@ public class PhoneNumberFormat implements Parcelable {
     private Boolean isEnabled = true;
 
     @Ignore
-    public PhoneNumberFormat() {
+    public PhoneNumberFormatPersist() {
     }
 
-    public PhoneNumberFormat(Integer id, String description, String format, Boolean isEnabled) {
+    public PhoneNumberFormatPersist(Long id, String description, String format, Boolean isEnabled) {
         this.id = id;
         this.description = description;
         this.format = format;
@@ -40,34 +40,26 @@ public class PhoneNumberFormat implements Parcelable {
     }
 
     @Ignore
-    public PhoneNumberFormat(PhoneNumberFormat phoneNumberFormat) {
-        this.id = phoneNumberFormat.getId();
-        this.description = phoneNumberFormat.getDescription();
-        this.format = phoneNumberFormat.getFormat();
-        this.isEnabled = phoneNumberFormat.getIsEnabled();
+    public PhoneNumberFormatPersist(PhoneNumberFormatPersist phoneNumberFormatPersist) {
+        this.id = phoneNumberFormatPersist.getId();
+        this.description = phoneNumberFormatPersist.getDescription();
+        this.format = phoneNumberFormatPersist.getFormat();
+        this.isEnabled = phoneNumberFormatPersist.getIsEnabled();
     }
 
     @Ignore
-    public PhoneNumberFormat(String description, String format, Boolean isEnabled) {
+    public PhoneNumberFormatPersist(String description, String format, Boolean isEnabled) {
         this.description = description;
         this.format = format;
         this.isEnabled = isEnabled;
     }
 
     @Ignore
-    public PhoneNumberFormat(Boolean isEnabled) {
+    public PhoneNumberFormatPersist(Boolean isEnabled) {
         this.isEnabled = isEnabled;
     }
 
-    @Ignore
-    protected PhoneNumberFormat(Parcel in) {
-        id = in.readInt();
-        description = in.readString();
-        format = in.readString();
-        isEnabled = in.readByte() != 0;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -83,7 +75,7 @@ public class PhoneNumberFormat implements Parcelable {
         return isEnabled;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -101,47 +93,22 @@ public class PhoneNumberFormat implements Parcelable {
 
     @Override
     public String toString() {
-        return "PhoneNumberFormat:\n"
+        return "PhoneNumberFormatPersist:\n"
                 + "id: " + this.id + "\n"
                 + "description: " + this.description + "\n"
                 + "format: " + this.format + "\n"
                 + "isEnabled: " + this.isEnabled;
     }
 
-    public static List<String> getFormatsAsString(List<PhoneNumberFormat> formats) {
+    public static List<String> getFormatsAsString(List<PhoneNumberFormatPersist> formats) {
         List<String> formatsAsString = new LinkedList<>();
-        for (PhoneNumberFormat format : formats) {
+        for (PhoneNumberFormatPersist format : formats) {
             formatsAsString.add(format.getFormat());
         }
         return formatsAsString;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(description);
-        parcel.writeString(format);
-        parcel.writeByte((byte) (isEnabled ? 1 : 0));
-    }
-
-    public static final Creator<PhoneNumberFormat> CREATOR = new Creator<PhoneNumberFormat>() {
-        @Override
-        public PhoneNumberFormat createFromParcel(Parcel in) {
-            return new PhoneNumberFormat(in);
-        }
-
-        @Override
-        public PhoneNumberFormat[] newArray(int size) {
-            return new PhoneNumberFormat[size];
-        }
-    };
-
-    public boolean isContentEqual(PhoneNumberFormat otherFormat) {
+    public boolean isContentEqual(PhoneNumberFormatPersist otherFormat) {
         if (otherFormat == this) {
             return true;
         }
@@ -151,6 +118,9 @@ public class PhoneNumberFormat implements Parcelable {
                 && ((this.format == null) ? (otherFormat.getFormat() == null) : this.format.equals(otherFormat.getFormat()))
                 && ((this.isEnabled == null) ? (otherFormat.getIsEnabled() == null) : this.isEnabled.equals(otherFormat.getIsEnabled())
         );
+    }
 
+    public static PhoneNumberFormatPersist convertPnfToPnfPersist(PhoneNumberFormat pnf) {
+        return new PhoneNumberFormatPersist(pnf.id(), pnf.description(), pnf.format(), pnf.isEnabled());
     }
 }

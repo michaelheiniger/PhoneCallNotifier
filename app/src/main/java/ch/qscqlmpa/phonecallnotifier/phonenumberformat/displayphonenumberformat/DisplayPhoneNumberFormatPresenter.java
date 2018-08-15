@@ -3,28 +3,30 @@ package ch.qscqlmpa.phonecallnotifier.phonenumberformat.displayphonenumberformat
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersistenceManager;
 import ch.qscqlmpa.phonecallnotifier.data.phonenumberformat.PhoneNumberFormatRepository;
 import ch.qscqlmpa.phonecallnotifier.di.ForScreen;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenScope;
 import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatViewModel;
 
 @ScreenScope
 class DisplayPhoneNumberFormatPresenter {
 
-    private final DisplayPhoneNumberFormatViewModel viewModel;
+    private final PhoneNumberFormatViewModel viewModel;
     private final PhoneNumberFormatRepository repository;
     private final PhoneNumberFormatPersistenceManager phoneNumberFormatPersistenceManager;
     private final DisposableManager disposableManager;
 
     @Inject
-    DisplayPhoneNumberFormatPresenter(DisplayPhoneNumberFormatViewModel viewModel,
+    DisplayPhoneNumberFormatPresenter(PhoneNumberFormatViewModel viewModel,
                                       PhoneNumberFormatRepository repository,
                                       PhoneNumberFormatPersistenceManager phoneNumberFormatPersistenceManager,
                                       @ForScreen DisposableManager disposableManager,
                                       @Named("phone_number_format_to_display")
-                                               PhoneNumberFormat phoneNumberFormat) {
+                                              PhoneNumberFormat phoneNumberFormat) {
 
         this.viewModel = viewModel;
         this.repository = repository;
@@ -46,6 +48,6 @@ class DisplayPhoneNumberFormatPresenter {
 
     void deletePhoneNumberFormat() {
         PhoneNumberFormat formatToDelete = viewModel.lastPhoneNumberFormat();
-        phoneNumberFormatPersistenceManager.deletePhoneNumberFormat(formatToDelete);
+        phoneNumberFormatPersistenceManager.deletePhoneNumberFormat(formatToDelete.id());
     }
 }

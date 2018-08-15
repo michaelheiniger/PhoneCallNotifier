@@ -15,8 +15,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import ch.qscqlmpa.phonecallnotifier.R;
 import ch.qscqlmpa.phonecallnotifier.base.BaseController;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatController;
+import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -26,7 +28,12 @@ public class AddEditPhoneNumberFormatController extends BaseController {
 
     public static Controller newInstance() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(PHONE_NUMBER_FORMAT_TO_EDIT_KEY, new PhoneNumberFormat(true));
+        bundle.putParcelable(PHONE_NUMBER_FORMAT_TO_EDIT_KEY,
+                PhoneNumberFormat.builder()
+                        .setDescription("")
+                        .setFormat("")
+                        .setIsEnabled(true)
+                        .build());
         return new AddEditPhoneNumberFormatController(bundle);
     }
 
@@ -40,7 +47,7 @@ public class AddEditPhoneNumberFormatController extends BaseController {
     AddEditPhoneNumberFormatPresenter presenter;
 
     @Inject
-    AddEditPhoneNumberFormatViewModel viewModel;
+    PhoneNumberFormatViewModel viewModel;
 
     @BindView(R.id.aepnf_phone_number_format_description_edt) EditText phoneNumberFormatDescriptionEdt;
 
@@ -65,10 +72,10 @@ public class AddEditPhoneNumberFormatController extends BaseController {
                 viewModel.phoneNumberFormat()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(phoneNumberFormat -> {
-                    phoneNumberFormatDescriptionEdt.setText(phoneNumberFormat.getDescription());
-                    phoneNumberFormatEdt.setText(phoneNumberFormat.getFormat());
-                    phoneNumberFormatEnabledCkb.setChecked(phoneNumberFormat.getIsEnabled());
-                    phoneNumberFormatEnabledCkb.setText(phoneNumberFormat.getIsEnabled() ? R.string.format_enabled : R.string.format_disabled);
+                    phoneNumberFormatDescriptionEdt.setText(phoneNumberFormat.description());
+                    phoneNumberFormatEdt.setText(phoneNumberFormat.format());
+                    phoneNumberFormatEnabledCkb.setChecked(phoneNumberFormat.isEnabled());
+                    phoneNumberFormatEnabledCkb.setText(phoneNumberFormat.isEnabled() ? R.string.format_enabled : R.string.format_disabled);
                 }),
 
                 viewModel.error()
@@ -88,11 +95,12 @@ public class AddEditPhoneNumberFormatController extends BaseController {
     @OnClick(R.id.aepnf_save_phone_number_format_btn)
     public void onSaveClicked() {
 
-        PhoneNumberFormat phoneNumberFormat = new PhoneNumberFormat(
-                phoneNumberFormatDescriptionEdt.getText().toString(),
-                phoneNumberFormatEdt.getText().toString(),
-                phoneNumberFormatEnabledCkb.isChecked()
-        );
+        PhoneNumberFormat phoneNumberFormat = PhoneNumberFormat.builder()
+                .setDescription(phoneNumberFormatDescriptionEdt.getText().toString())
+                .setFormat(phoneNumberFormatEdt.getText().toString())
+                .setIsEnabled(phoneNumberFormatEnabledCkb.isChecked())
+                .build();
+
         presenter.onSaveClick(phoneNumberFormat);
 
         Controller parentController = getParentController();

@@ -2,13 +2,16 @@ package ch.qscqlmpa.phonecallnotifier.phonenumberformat.phonenumberformatlist;
 
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import ch.qscqlmpa.phonecallnotifier.R;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenScope;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import timber.log.Timber;
@@ -33,6 +36,7 @@ class PhoneNumberFormatListViewModel {
 
     Consumer<List<PhoneNumberFormat>> phoneNumberFormatsUpdated() {
         errorRelay.accept(-1);
+
         return phoneNumberFormatsRelay;
     }
 

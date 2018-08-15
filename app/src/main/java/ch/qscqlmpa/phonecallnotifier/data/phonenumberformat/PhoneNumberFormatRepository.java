@@ -7,11 +7,11 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import ch.qscqlmpa.phonecallnotifier.data.database.AppRoomDatabase;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class PhoneNumberFormatRepository {
@@ -29,12 +29,14 @@ public class PhoneNumberFormatRepository {
 
     public Flowable<List<PhoneNumberFormat>> getAllPhoneNumberFormats() {
         return database.phoneNumberFormatRegularDao().getAllPhoneNumberFormats()
+                .map(PhoneNumberFormat::convertPnfPersistListIntoPnfList)
                 .subscribeOn(scheduler);
     }
 
     public Single<PhoneNumberFormat> getPhoneNumberFormat(PhoneNumberFormat phoneNumberFormat) {
         return database.phoneNumberFormatRegularDao()
-                .getPhoneNumberFormat(phoneNumberFormat.getId())
+                .getPhoneNumberFormat(phoneNumberFormat.id())
+                .map(PhoneNumberFormat::convertPnfPersistToPnf)
                 .subscribeOn(scheduler);
     }
 }

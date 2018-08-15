@@ -14,8 +14,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import ch.qscqlmpa.phonecallnotifier.R;
 import ch.qscqlmpa.phonecallnotifier.base.BaseController;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatController;
+import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -33,7 +35,7 @@ public class DisplayPhoneNumberFormatController extends BaseController {
     DisplayPhoneNumberFormatPresenter presenter;
 
     @Inject
-    DisplayPhoneNumberFormatViewModel viewModel;
+    PhoneNumberFormatViewModel viewModel;
 
     @BindView(R.id.dpnf_phone_number_format_description_tv)
     TextView phoneNumberFormatDescriptionTv;
@@ -68,10 +70,10 @@ public class DisplayPhoneNumberFormatController extends BaseController {
                 viewModel.phoneNumberFormat()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(phoneNumberFormat -> {
-                            phoneNumberFormatDescriptionTv.setText(phoneNumberFormat.getDescription());
-                            phoneNumberFormatTv.setText(phoneNumberFormat.getFormat());
-                            phoneNumberFormatEnabledCkb.setChecked(phoneNumberFormat.getIsEnabled());
-                            phoneNumberFormatEnabledCkb.setText(phoneNumberFormat.getIsEnabled() ? R.string.format_enabled : R.string.format_disabled);
+                            phoneNumberFormatDescriptionTv.setText(phoneNumberFormat.description());
+                            phoneNumberFormatTv.setText(phoneNumberFormat.format());
+                            phoneNumberFormatEnabledCkb.setChecked(phoneNumberFormat.isEnabled());
+                            phoneNumberFormatEnabledCkb.setText(phoneNumberFormat.isEnabled() ? R.string.format_enabled : R.string.format_disabled);
                         }),
 
                 viewModel.error()
@@ -95,7 +97,7 @@ public class DisplayPhoneNumberFormatController extends BaseController {
 
     @OnClick(R.id.dpnf_edit_phone_number_format_btn)
     void editPhoneNumberFormat() {
-//        presenter.showEditPhoneNumberFormatFrame();
+
         Controller parentController = getParentController();
         if (parentController instanceof PhoneNumberFormatController) {
             PhoneNumberFormat formatToEdit = presenter.getPhoneNumberFormat();

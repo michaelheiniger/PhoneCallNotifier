@@ -8,7 +8,6 @@ import ch.qscqlmpa.phonecallnotifier.data.database.AppRoomDatabase;
 import io.reactivex.Completable;
 import io.reactivex.Scheduler;
 import io.reactivex.functions.Action;
-import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 @Singleton
@@ -25,21 +24,21 @@ public class PhoneNumberFormatPersistenceManager {
         this.scheduler = scheduler;
     }
 
-    public void insertPhoneNumberFormat(PhoneNumberFormat phoneNumberFormat) {
+    public void insertPhoneNumberFormat(PhoneNumberFormatPersist phoneNumberFormatPersist) {
         runDbOperation(() -> {
-            database.phoneNumberFormatRegularDao().insertPhoneNumberFormat(phoneNumberFormat);
+            database.phoneNumberFormatRegularDao().insertPhoneNumberFormat(phoneNumberFormatPersist);
         });
     }
 
-    public void updatePhoneNumberFormat(PhoneNumberFormat phoneNumberFormat) {
+    public void updatePhoneNumberFormat(PhoneNumberFormatPersist phoneNumberFormatPersist) {
         runDbOperation(() -> {
-            database.phoneNumberFormatRegularDao().updatePhoneNumberFormat(phoneNumberFormat);
+            database.phoneNumberFormatRegularDao().updatePhoneNumberFormat(phoneNumberFormatPersist);
         });
     }
 
-    public void deletePhoneNumberFormat(PhoneNumberFormat phoneNumberFormat) {
+    public void deletePhoneNumberFormat(Long id) {
         runDbOperation(() -> {
-            database.phoneNumberFormatRegularDao().deletePhoneNumberFormat(phoneNumberFormat);
+            database.phoneNumberFormatRegularDao().deletePhoneNumberFormat(id);
         });
     }
 

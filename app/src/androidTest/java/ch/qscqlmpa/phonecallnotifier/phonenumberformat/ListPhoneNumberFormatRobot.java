@@ -5,7 +5,8 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import java.util.List;
 
 import ch.qscqlmpa.phonecallnotifier.R;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -29,8 +30,8 @@ public class ListPhoneNumberFormatRobot {
     ListPhoneNumberFormatRobot verifyListElements() {
 
         for (PhoneNumberFormat format : phoneNumberFormatList) {
-            onView(allOf(withId(R.id.pnfr_phone_number_format_description_tv), withText(format.getDescription()))).check(matches(withText(format.getDescription())));
-            onView(allOf(withId(R.id.pnfr_phone_number_format_tv), withText(format.getFormat()))).check(matches(withText(format.getFormat())));
+            onView(allOf(withId(R.id.pnfr_phone_number_format_description_tv), withText(format.description()))).check(matches(withText(format.description())));
+            onView(allOf(withId(R.id.pnfr_phone_number_format_tv), withText(format.format()))).check(matches(withText(format.format())));
 
             // Cannot verify the checkbox because there is no way to distinguish them
 //            if (format.getIsEnabled()) {

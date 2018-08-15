@@ -6,6 +6,7 @@ import ch.qscqlmpa.phonecallnotifier.data.phonenumberformat.PhoneNumberFormatRep
 import ch.qscqlmpa.phonecallnotifier.di.ForScreen;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenScope;
 import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 
 @ScreenScope
 public class PhoneNumberFormatListPresenter {

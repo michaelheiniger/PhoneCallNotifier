@@ -9,9 +9,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.data.phonenumberformat.PhoneNumberFormatRepository;
 import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class PhoneNumberFormatListPresenterTest {
+public class PhoneNumberFormatPersistListPresenterTest {
 
     @Mock PhoneNumberFormatListViewModel viewModel;
     @Mock
@@ -39,11 +40,11 @@ public class PhoneNumberFormatListPresenterTest {
 
     @Test
     public void phoneNumberFormatListLoaded() throws Exception {
-        List<PhoneNumberFormat> formatList = setupPhoneNumberFormatListSuccess();
+        List<PhoneNumberFormat> pnfList = setupPhoneNumberFormatListSuccess();
         initializePresenter();
 
         verify(repository).getAllPhoneNumberFormats();
-        verify(onSuccessConsumer).accept(formatList);
+        verify(onSuccessConsumer).accept(pnfList);
         verifyZeroInteractions(onErrorConsumer);
     }
 
@@ -57,16 +58,32 @@ public class PhoneNumberFormatListPresenterTest {
     }
 
     private List<PhoneNumberFormat> setupPhoneNumberFormatListSuccess() {
-        List<PhoneNumberFormat> phoneNumberFormatList = phoneNumberFormatListToDisplay();
-        when(repository.getAllPhoneNumberFormats()).thenReturn(Flowable.just(phoneNumberFormatList));
-        return phoneNumberFormatList;
+        List<PhoneNumberFormat> pnfList = phoneNumberFormatListToDisplay();
+        when(repository.getAllPhoneNumberFormats()).thenReturn(Flowable.just(pnfList));
+        return pnfList;
     }
 
     private List<PhoneNumberFormat> phoneNumberFormatListToDisplay() {
         return Arrays.asList(
-                new PhoneNumberFormat(1, "the description1", "the format1", true),
-                new PhoneNumberFormat(2, "the description2", "the format2", true),
-                new PhoneNumberFormat(3, "the description3", "the format3", false));
+                PhoneNumberFormat.builder()
+                    .setId(1L)
+                    .setDescription("The description 1")
+                    .setFormat("The format 1")
+                    .setIsEnabled(true)
+                    .build(),
+                PhoneNumberFormat.builder()
+                        .setId(2L)
+                        .setDescription("The description 2")
+                        .setFormat("The format 1")
+                        .setIsEnabled(true)
+                        .build(),
+                PhoneNumberFormat.builder()
+                        .setId(3L)
+                        .setDescription("The description 3")
+                        .setFormat("The format 1")
+                        .setIsEnabled(false)
+                        .build()
+        );
     }
 
     private void initializePresenter() {

@@ -3,17 +3,19 @@ package ch.qscqlmpa.phonecallnotifier.phonenumberformat.addeditphonenumberformat
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersistenceManager;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
 import ch.qscqlmpa.phonecallnotifier.data.phonenumberformat.PhoneNumberFormatRepository;
 import ch.qscqlmpa.phonecallnotifier.di.ForScreen;
 import ch.qscqlmpa.phonecallnotifier.di.ScreenScope;
 import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.phonenumberformat.PhoneNumberFormatViewModel;
 
 @ScreenScope
 class AddEditPhoneNumberFormatPresenter {
 
-    private final AddEditPhoneNumberFormatViewModel viewModel;
+    private final PhoneNumberFormatViewModel viewModel;
     private final PhoneNumberFormatRepository repository;
     private final PhoneNumberFormatPersistenceManager phoneNumberFormatPersistenceManager;
     private final DisposableManager disposableManager;
@@ -21,19 +23,19 @@ class AddEditPhoneNumberFormatPresenter {
     private final boolean isAddOperation;
 
     @Inject
-    AddEditPhoneNumberFormatPresenter(AddEditPhoneNumberFormatViewModel viewModel,
+    AddEditPhoneNumberFormatPresenter(PhoneNumberFormatViewModel viewModel,
                                       PhoneNumberFormatRepository repository,
                                       PhoneNumberFormatPersistenceManager phoneNumberFormatPersistenceManager,
                                       @ForScreen DisposableManager disposableManager,
                                       @Named("phone_number_format_to_edit")
-                                               PhoneNumberFormat phoneNumberFormat) {
+                                              PhoneNumberFormat phoneNumberFormat) {
 
         this.viewModel = viewModel;
         this.repository = repository;
         this.phoneNumberFormatPersistenceManager = phoneNumberFormatPersistenceManager;
         this.disposableManager = disposableManager;
 
-        if (phoneNumberFormat.getId() != null) {
+        if (phoneNumberFormat.id() != null) {
             loadPhoneNumberFormatToEdit(phoneNumberFormat);
             isAddOperation = false;
         } else {
@@ -58,12 +60,13 @@ class AddEditPhoneNumberFormatPresenter {
     }
 
     public void onSaveClick(PhoneNumberFormat phoneNumberFormat) {
+        PhoneNumberFormatPersist pnfPersist = PhoneNumberFormatPersist.convertPnfToPnfPersist(phoneNumberFormat);
         if (isAddOperation) {
-            phoneNumberFormatPersistenceManager.insertPhoneNumberFormat(phoneNumberFormat);
+            phoneNumberFormatPersistenceManager.insertPhoneNumberFormat(pnfPersist);
         } else {
             PhoneNumberFormat formatToEdit = viewModel.lastPhoneNumberFormat();
-            phoneNumberFormat.setId(formatToEdit.getId());
-            phoneNumberFormatPersistenceManager.updatePhoneNumberFormat(phoneNumberFormat);
+            pnfPersist.setId(formatToEdit.id());
+            phoneNumberFormatPersistenceManager.updatePhoneNumberFormat(pnfPersist);
         }
     }
 }

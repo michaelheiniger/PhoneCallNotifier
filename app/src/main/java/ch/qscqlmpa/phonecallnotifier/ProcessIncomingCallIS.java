@@ -16,11 +16,10 @@ import javax.inject.Singleton;
 import ch.qscqlmpa.phonecallnotifier.base.BaseService;
 import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatDao;
 import ch.qscqlmpa.phonecallnotifier.data.database.AppRoomDatabase;
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
 import ch.qscqlmpa.phonecallnotifier.home.MainActivity;
 import ch.qscqlmpa.phonecallnotifier.lifecycle.DisposableManager;
 import ch.qscqlmpa.phonecallnotifier.phonecall.PhoneNumberProcessor;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -80,11 +79,11 @@ public class ProcessIncomingCallIS extends BaseService {
         );
     }
 
-    private void processPhoneNumberFormats(String callerNumber, List<PhoneNumberFormat> phoneNumberFormats) {
+    private void processPhoneNumberFormats(String callerNumber, List<PhoneNumberFormatPersist> phoneNumberFormatPersists) {
 
         if (PhoneNumberProcessor.doesPhoneNumberMatchAtLeastOneFormat(
                 callerNumber,
-                PhoneNumberFormat.getFormatsAsString(phoneNumberFormats))) {
+                PhoneNumberFormatPersist.getFormatsAsString(phoneNumberFormatPersists))) {
 
             TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             try {

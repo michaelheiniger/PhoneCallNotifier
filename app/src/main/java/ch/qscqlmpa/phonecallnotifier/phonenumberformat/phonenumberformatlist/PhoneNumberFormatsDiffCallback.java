@@ -4,14 +4,16 @@ import android.support.v7.util.DiffUtil;
 
 import java.util.List;
 
-import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormat;
+import ch.qscqlmpa.phonecallnotifier.data.database.phonenumberformat.PhoneNumberFormatPersist;
+import ch.qscqlmpa.phonecallnotifier.model.PhoneNumberFormat;
 
 public class PhoneNumberFormatsDiffCallback extends DiffUtil.Callback {
 
     private final List<PhoneNumberFormat> oldList;
     private final List<PhoneNumberFormat> newList;
 
-    public PhoneNumberFormatsDiffCallback(List<PhoneNumberFormat> oldList, List<PhoneNumberFormat> newList) {
+    public PhoneNumberFormatsDiffCallback(List<PhoneNumberFormat> oldList,
+                                          List<PhoneNumberFormat> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
@@ -28,7 +30,7 @@ public class PhoneNumberFormatsDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
+        return oldList.get(oldItemPosition).id() == newList.get(newItemPosition).id();
     }
 
     @Override
@@ -36,9 +38,6 @@ public class PhoneNumberFormatsDiffCallback extends DiffUtil.Callback {
         PhoneNumberFormat oldItem = oldList.get(oldItemPosition);
         PhoneNumberFormat newItem = newList.get(newItemPosition);
 
-        return oldItem.getId().equals(newItem.getId())
-                && oldItem.getFormat().equals(newItem.getFormat())
-                && oldItem.getDescription().equals(newItem.getDescription())
-                && oldItem.getIsEnabled().equals(newItem.getIsEnabled());
+        return oldItem.equals(newItem);
     }
 }
