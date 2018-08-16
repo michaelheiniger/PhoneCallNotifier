@@ -1,3 +1,5 @@
+![phonecallnotifier](https://user-images.githubusercontent.com/37498811/44225890-71c74180-a1b0-11e8-898e-d3843a6c4f57.png)
+
 # PhoneCallNotifier
 [![Build Status](https://travis-ci.com/michaelheiniger/PhoneCallNotifier.svg?branch=master)](https://travis-ci.com/michaelheiniger/PhoneCallNotifier)
 
