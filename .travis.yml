@@ -1,0 +1,26 @@
+language: android
+jdk: oraclejdk8
+
+notifications:
+  slack: qscqlmpa:10kU0je5eL3Xuyormi9O3tWY
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-28.0.3
+    - android-28
+    - extra-google-m2repository
+    - extra-android-m2repository
+
+before_install:
+  - yes | sdkmanager "platforms;android-28"
+ 
+
+script:
+    - ./gradlew build
+
+branches:
+  only:
+  -master
+  - develop
